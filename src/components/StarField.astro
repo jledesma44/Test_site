@@ -1,7 +1,7 @@
 <div class="star-field">
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
+  <div class="stars stars-1"></div>
+  <div class="stars stars-2"></div>
+  <div class="stars stars-3"></div>
 </div>
 
 <style>
@@ -11,55 +11,58 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: transparent;
+    perspective: 340px;
     overflow: hidden;
   }
 
-  .layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: transparent;
+  .stars {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    box-shadow: -447px 387px #c4a1ff,
+                -401px 118px #b185db,
+                508px -381px #d1b3ff,
+                419px -348px #8e44ad,
+                237px 95px #9b59b6,
+                -417px -76px #a569bd,
+                -163px -89px #8e44ad,
+                -110px -66px #9b59b6,
+                223px 321px #d2b4ff,
+                -45px -140px #b185db,
+                -101px 147px #c4a1ff,
+                531px -206px #8e44ad,
+                -100px 262px #9b59b6,
+                -51px 272px #d2b4ff,
+                -58px -40px #b185db,
+                -401px 194px #c4a1ff,
+                -401px 194px #d2b4ff,
+                -211px 384px #8e44ad,
+                197px -298px #9b59b6;
+    animation: fly 10s linear infinite;
+    transform-style: preserve-3d;
   }
 
-  .layer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: radial-gradient(circle at center, #fff 0.1px, transparent 0.5px);
-    background-size: 50px 50px;
-    animation: move 15s linear infinite;
+  .stars-1 {
+    animation-delay: 0s;
   }
 
-  .layer:nth-child(1)::after {
-    opacity: 0.4;
-    animation-duration: 20s;
-    background-size: 100px 100px;
+  .stars-2 {
+    animation-delay: -3.3s;
   }
 
-  .layer:nth-child(2)::after {
-    opacity: 0.3;
-    animation-duration: 30s;
-    background-size: 200px 200px;
+  .stars-3 {
+    animation-delay: -6.6s;
   }
 
-  .layer:nth-child(3)::after {
-    opacity: 0.2;
-    animation-duration: 40s;
-    background-size: 300px 300px;
-  }
-
-  @keyframes move {
-    0% {
-      transform: translateY(0);
+  @keyframes fly {
+    from {
+      transform: rotate(0deg) translateZ(0px);
     }
-    100% {
-      transform: translateY(1000px);
+    to {
+      transform: rotate(360deg) translateZ(0px);
     }
   }
 </style>
