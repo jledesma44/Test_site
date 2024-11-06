@@ -1,0 +1,65 @@
+<div class="star-field">
+  <div class="layer"></div>
+  <div class="layer"></div>
+  <div class="layer"></div>
+</div>
+
+<style>
+  .star-field {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, #2e1065, #4c1d95);
+    overflow: hidden;
+  }
+
+  .layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+  }
+
+  .layer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at center, #fff 0.1px, transparent 0.5px);
+    background-size: 50px 50px;
+    animation: move 8s linear infinite;
+  }
+
+  .layer:nth-child(1)::after {
+    opacity: 0.4;
+    animation-duration: 20s;
+    background-size: 100px 100px;
+  }
+
+  .layer:nth-child(2)::after {
+    opacity: 0.3;
+    animation-duration: 30s;
+    background-size: 200px 200px;
+  }
+
+  .layer:nth-child(3)::after {
+    opacity: 0.2;
+    animation-duration: 40s;
+    background-size: 300px 300px;
+  }
+
+  @keyframes move {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(1000px);
+    }
+  }
+</style>
