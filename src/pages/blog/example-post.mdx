@@ -1,0 +1,30 @@
+---
+layout: ../../layouts/BlogPost.astro
+title: "Example Blog Post"
+description: "This is an example blog post using the new template"
+pubDate: 2024-11-07
+featuredImage: 
+  url: "https://images.unsplash.com/photo-1516259762381-22954d7d3ad2"
+  alt: "Code on a computer screen"
+---
+import BlogCTA from '../../components/BlogCTA.astro';
+import BlogPagination from '../../components/BlogPagination.astro';
+
+This is an example blog post that demonstrates the new blog template features.
+
+## Section Example
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+<BlogPagination slot="pagination"
+  prevPost={{
+    url: "/blog/previous-post",
+    title: "Previous Post Title"
+  }}
+  nextPost={{
+    url: "/blog/next-post",
+    title: "Next Post Title"
+  }}
+/>
+
+<BlogCTA slot="cta" />
