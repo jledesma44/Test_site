@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
 import ThemeToggle from '../components/ThemeToggle';
+import NavScroll from '../components/NavScroll';
 import '../styles/globals.css';
 
 interface Props {
@@ -23,7 +24,8 @@ const { title } = Astro.props;
 	</head>
 	<body>
 		<div class="min-h-screen bg-gradient-to-b from-indigo-950 to-purple-900">
-			<header class="border-b">
+			<NavScroll client:load />
+			<header class="border-b fixed w-full top-0 z-50 transition-colors duration-300 bg-transparent">
 				<div class="container flex items-center justify-between py-4">
 					<a href="/" class="text-2xl font-bold">DevStack</a>
 					<nav class="flex-1 flex justify-center gap-8">
@@ -43,7 +45,7 @@ const { title } = Astro.props;
 					</div>
 				</div>
 			</header>
-			<main class="container py-8">
+			<main class="container py-8 mt-20">
 				<slot />
 			</main>
 			<footer class="border-t">
