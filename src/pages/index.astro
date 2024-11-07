@@ -4,28 +4,36 @@ import StarField from '../components/StarField.astro';
 ---
 
 <Layout title="DevStack - Web Development Blog">
-	<div class="relative text-center pt-8 pb-16 space-y-8 overflow-hidden min-h-[80vh] perspective-1000">
+	<div class="relative pt-8 pb-16 overflow-hidden min-h-[80vh] perspective-1000">
 		<StarField />
-		<div class="relative z-10">
-		<h1 class="text-6xl font-bold text-white mb-12">Welcome to DevStack</h1>
-		<div class="max-w-3xl mx-auto aspect-video mb-12">
-			<iframe
-				class="w-full h-full rounded-xl shadow-lg"
-				src="https://www.youtube.com/embed/your-video-id"
-				title="Welcome to DevStack"
-				frameborder="0"
-				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-				allowfullscreen
-			></iframe>
-		</div>
-		<div>
-			<a 
-				href="/resources" 
-				class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors"
-			>
-				Get Started Now
-			</a>
-		</div>
+		<div class="relative z-10 container">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+				<div class="aspect-video">
+					<iframe
+						class="w-full h-full rounded-xl shadow-lg"
+						src="https://www.youtube.com/embed/your-video-id"
+						title="Welcome to DevStack"
+						frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen
+					></iframe>
+				</div>
+				<div class="text-left space-y-6">
+					<h1 class="text-5xl lg:text-6xl font-bold text-white">Welcome to DevStack</h1>
+					<p class="text-lg text-gray-200">
+						Your ultimate resource for web development tutorials, tips, and best practices. 
+						Join our community of developers and level up your coding skills.
+					</p>
+					<div>
+						<a 
+							href="/resources" 
+							class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors"
+						>
+							Get Started Now
+						</a>
+					</div>
+				</div>
+			</div>
 	</div>
 	<h2 class="text-4xl font-bold mb-8 mt-16">Latest Articles</h2>
 	<div class="grid gap-8">
