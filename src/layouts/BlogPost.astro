@@ -12,7 +12,12 @@ interface Props {
 }
 
 const { title, description, pubDate: rawPubDate, featuredImage } = Astro.props;
-const pubDate = rawPubDate instanceof Date ? rawPubDate : new Date(rawPubDate);
+const pubDate = new Date(rawPubDate);
+
+// Validate the date
+if (isNaN(pubDate.getTime())) {
+  throw new Error(`Invalid date format for pubDate: ${rawPubDate}`);
+}
 ---
 
 <Layout title={title} description={description}>
