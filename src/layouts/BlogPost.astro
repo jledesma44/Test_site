@@ -15,21 +15,30 @@ const { title, description, pubDate: rawPubDate, featuredImage } = Astro.props;
 
 // Ensure we have a valid date object
 let pubDate;
-if (rawPubDate instanceof Date) {
-  pubDate = rawPubDate;
-} else {
-  // Handle string date format
-  pubDate = new Date(rawPubDate);
-  if (isNaN(pubDate.getTime())) {
-    // If invalid, try parsing as YYYY-MM-DD
-    const [year, month, day] = rawPubDate.split('-').map(num => parseInt(num, 10));
-    pubDate = new Date(year, month - 1, day);
-  }
-}
 
-// Final validation
-if (isNaN(pubDate.getTime())) {
-  throw new Error(`Invalid date format for pubDate: ${rawPubDate}`);
+try {
+  if (rawPubDate instanceof Date) {
+    pubDate = rawPubDate;
+  } else if (typeof rawPubDate === 'string') {
+    // First try parsing as ISO string
+    pubDate = new Date(rawPubDate);
+    
+    // If that fails, try parsing as YYYY-MM-DD
+    if (isNaN(pubDate.getTime()) && rawPubDate.includes('-')) {
+      const parts = rawPubDate.split('T')[0].split('-');
+      if (parts.length === 3) {
+        const [year, month, day] = parts.map(num => parseInt(num, 10));
+        pubDate = new Date(year, month - 1, day);
+      }
+    }
+  }
+
+  // Final validation
+  if (!pubDate || isNaN(pubDate.getTime())) {
+    throw new Error('Invalid date');
+  }
+} catch (error) {
+  throw new Error(`Invalid date format for pubDate: ${rawPubDate}. Please use YYYY-MM-DD or ISO format.`);
 }
 ---
 
