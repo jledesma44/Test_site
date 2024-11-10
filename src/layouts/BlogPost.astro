@@ -16,22 +16,29 @@ const { title, description, pubDate: rawPubDate, featuredImage } = Astro.props;
 // Ensure we have a valid date object
 let pubDate;
 
+if (!rawPubDate) {
+  throw new Error('pubDate is required in frontmatter');
+}
+
 try {
   // Handle string dates (from MDX frontmatter)
   if (typeof rawPubDate === 'string') {
-    // Remove any quotes and trim whitespace
-    const cleanDate = rawPubDate.replace(/["']/g, '').trim();
-    pubDate = new Date(cleanDate);
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (dateRegex.test(rawPubDate)) {
+      pubDate = new Date(rawPubDate + 'T00:00:00.000Z');
+    } else {
+      throw new Error('Invalid date format');
+    }
   } 
   // Handle Date objects
   else if (rawPubDate instanceof Date) {
     pubDate = rawPubDate;
   }
   else {
-    throw new Error('pubDate must be a string or Date object');
+    throw new Error('pubDate must be a string in YYYY-MM-DD format or a Date object');
   }
 
-  // Validate the resulting date
+  // Final validation
   if (!pubDate || isNaN(pubDate.getTime())) {
     throw new Error('Invalid date value');
   }
