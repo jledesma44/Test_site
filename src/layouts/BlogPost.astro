@@ -11,7 +11,8 @@ interface Props {
   };
 }
 
-const { title, description, pubDate, featuredImage } = Astro.props;
+const { title, description, pubDate: rawPubDate, featuredImage } = Astro.props;
+const pubDate = new Date(rawPubDate);
 ---
 
 <Layout title={title} description={description}>
