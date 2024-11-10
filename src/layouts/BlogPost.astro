@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { title, description, pubDate: rawPubDate, featuredImage } = Astro.props;
-const pubDate = new Date(rawPubDate);
+const pubDate = rawPubDate instanceof Date ? rawPubDate : new Date(rawPubDate);
 ---
 
 <Layout title={title} description={description}>
