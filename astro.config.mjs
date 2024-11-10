@@ -1,11 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-  darkMode: 'class',
-  theme: {
-    extend: {},
-  },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import tailwind from '@astrojs/tailwind';
+import react from '@astrojs/react';
+
+export default defineConfig({
+  integrations: [mdx(), tailwind(), react()]
+});
