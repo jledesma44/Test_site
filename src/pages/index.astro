@@ -1,12 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import StarField from '../components/StarField.astro';
 const posts = await Astro.glob('./blog/*.mdx');
 ---
 
 <Layout title="My Blog">
   <main>
-    <section class="py-20 sm:py-32">
-      <div class="max-w-4xl mx-auto px-4">
+    <section class="py-20 sm:py-32 relative overflow-hidden">
+      <StarField />
+      <div class="max-w-4xl mx-auto px-4 relative z-10">
         <h1 class="text-5xl sm:text-6xl font-bold mb-6">
           Welcome to My Blog
         </h1>
