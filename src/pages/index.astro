@@ -8,19 +8,32 @@ const posts = await Astro.glob('./blog/*.mdx');
   <main>
     <section class="py-20 sm:py-32 relative overflow-hidden">
       <StarField />
-      <div class="max-w-4xl mx-auto px-4 relative z-10">
-        <h1 class="text-5xl sm:text-6xl font-bold mb-6">
-          Welcome to My Blog
-        </h1>
-        <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
-          Exploring web development, technology, and everything in between.
-        </p>
-        <a 
-          href="/about" 
-          class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Learn More
-        </a>
+      <div class="max-w-6xl mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h1 class="text-5xl sm:text-6xl font-bold mb-6">
+              Welcome to My Blog
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+              Exploring web development, technology, and everything in between.
+            </p>
+            <a 
+              href="/about" 
+              class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Learn More
+            </a>
+          </div>
+          <div class="aspect-video">
+            <iframe
+              class="w-full h-full rounded-lg shadow-lg"
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              title="Featured Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
       </div>
     </section>
     <div class="max-w-4xl mx-auto px-4 py-8">
