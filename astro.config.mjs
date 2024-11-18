@@ -4,5 +4,11 @@ import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  integrations: [mdx(), tailwind(), react()]
+  integrations: [
+    mdx(),
+    tailwind(),
+    react({
+      include: ['**/react/*', '**/components/*.tsx'],
+    }),
+  ],
 });
