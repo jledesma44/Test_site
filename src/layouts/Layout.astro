@@ -1,31 +1,71 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
-import ThemeToggle from '../components/ThemeToggle';
-import NavScroll from '../components/NavScroll';
 import '../styles/globals.css';
 
 interface Props {
 	title: string;
+	description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro blog with dark mode" />
+		<meta name="description" content={description || "Astro blog with dark mode"} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<ViewTransitions />
+		<script is:inline>
+			function applyTheme(theme) {
+				document.documentElement.classList[theme === 'dark' ? 'add' : 'remove']('dark');
+			}
+
+			// Initialize theme before page load to prevent flash
+			const theme = (() => {
+				if (typeof localStorage !== 'undefined') {
+					const savedTheme = localStorage.getItem('theme');
+					if (savedTheme) {
+						applyTheme(savedTheme);
+						return savedTheme;
+					}
+				}
+				applyTheme('dark');
+				return 'dark';
+			})();
+		</script>
+		<style>
+			/* Initial state */
+			header {
+				@apply bg-white/80 dark:bg-indigo-950/80 border-b border-gray-200 dark:border-indigo-900/50;
+			}
+
+			/* Scrolled state */
+			header.scrolled {
+				@apply shadow-sm;
+			}
+			
+			:root:not(.dark) header.scrolled {
+				@apply bg-white/95 shadow-lg border-b-0;
+			}
+			
+			:root.dark header.scrolled {
+				@apply bg-purple-900/95 shadow-lg;
+			}
+
+			/* Transition for all header changes */
+			header {
+				@apply transition-all duration-300 ease-in-out;
+			}
+		</style>
 	</head>
 	<body>
-		<div class="min-h-screen bg-gradient-to-b from-indigo-950 to-purple-900">
-			<NavScroll client:load />
-			<header class="border-b border-indigo-900 fixed w-full top-0 z-50 transition-colors duration-300 bg-indigo-950">
+		<div class="min-h-screen bg-white dark:bg-gradient-to-b dark:from-indigo-950 dark:to-purple-900 text-black dark:text-white transition-colors duration-300">
+			<header class="fixed w-full top-0 z-50 backdrop-blur">
 				<div class="container flex items-center justify-between py-4">
 					<a href="/" class="text-2xl font-bold">DevStack</a>
 					<nav class="flex-1 flex justify-center gap-8">
@@ -41,18 +81,57 @@ const { title } = Astro.props;
 						<a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="hover:text-gray-600 dark:hover:text-gray-300">
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
 						</a>
-						<ThemeToggle client:load />
+						<button id="theme-toggle" class="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300">
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block dark:hidden"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+						</button>
 					</div>
 				</div>
 			</header>
 			<main class="max-w-[1100px] mx-auto pt-32 pb-8 px-4">
 				<slot />
 			</main>
-			<footer class="border-t">
+			<footer class="border-t border-gray-200 dark:border-indigo-900">
 				<div class="container py-4 text-center text-sm text-gray-600 dark:text-gray-400">
 					© {new Date().getFullYear()} DevStack. All rights reserved.
 				</div>
 			</footer>
 		</div>
+		<script>
+			function handleScroll() {
+				const header = document.querySelector('header');
+				if (!header) return;
+				
+				if (window.scrollY > 0) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			}
+
+			function setupThemeToggle() {
+				const themeToggle = document.getElementById('theme-toggle');
+				if (!themeToggle) return;
+
+				themeToggle.addEventListener('click', () => {
+					const isDark = document.documentElement.classList.toggle('dark');
+					localStorage.setItem('theme', isDark ? 'dark' : 'light');
+					handleScroll();
+				});
+			}
+
+			// Initialize
+			setupThemeToggle();
+			handleScroll();
+			window.addEventListener('scroll', handleScroll);
+
+			// Handle theme persistence during navigation
+			document.addEventListener('astro:after-swap', () => {
+				const savedTheme = localStorage.getItem('theme') || 'dark';
+				document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+				setupThemeToggle();
+				handleScroll();
+			});
+		</script>
 	</body>
 </html>

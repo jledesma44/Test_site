@@ -1,30 +1,67 @@
 ---
 import Layout from './Layout.astro';
 
-interface Props {
-  title: string;
-  description: string;
-  pubDate: string;
+interface FeaturedImage {
+  url: string;
+  alt: string;
 }
 
-const { title, description, pubDate } = Astro.props;
-const date = new Date(pubDate);
+interface Frontmatter {
+  title: string;
+  description?: string;
+  pubDate: string | Date;
+  author?: string;
+  featuredImage?: FeaturedImage;
+}
+
+interface Props {
+  frontmatter: Frontmatter;
+}
+
+const { frontmatter } = Astro.props;
+const { title, description, pubDate, author, featuredImage } = frontmatter;
+
+// Ensure pubDate is a valid Date object
+function parseDate(date: string | Date): Date {
+  if (date instanceof Date) return date;
+  // Remove any quotes and try to parse the date
+  const cleanDate = date.replace(/['"]/g, '');
+  const parsedDate = new Date(cleanDate);
+  if (isNaN(parsedDate.getTime())) {
+    throw new Error(`Invalid date: ${date}`);
+  }
+  return parsedDate;
+}
+
+const date = parseDate(pubDate);
 ---
 
-<Layout title={title} description={description}>
-  <article class="max-w-3xl mx-auto px-4 py-8">
-    <header class="mb-8">
+<Layout title={title}>
+  <article class="prose dark:prose-invert max-w-3xl mx-auto px-4 py-8">
+    <header class="not-prose mb-8">
+      {featuredImage && (
+        <div class="mb-6 rounded-lg overflow-hidden">
+          <img 
+            src={featuredImage.url} 
+            alt={featuredImage.alt}
+            class="w-full h-auto"
+            loading="eager"
+          />
+        </div>
+      )}
       <h1 class="text-4xl font-bold mb-2">{title}</h1>
-      <time datetime={date.toISOString()} class="text-gray-500">
-        {date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })}
-      </time>
+      <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400">
+        <time datetime={date.toISOString()}>
+          {new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }).format(date)}
+        </time>
+        {author && <span>by {author}</span>}
+      </div>
+      {description && <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">{description}</p>}
     </header>
-    <div class="prose dark:prose-invert max-w-none">
-      <slot />
-    </div>
+    <slot />
   </article>
 </Layout>
