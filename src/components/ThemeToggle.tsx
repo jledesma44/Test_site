@@ -1,39 +1,37 @@
-import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { Moon, Sun } from 'lucide-react';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState<string>('light');
+  const [mounted, setMounted] = useState(false);
 
-  // Initialize theme from localStorage on mount
+  // Only run on client-side
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("theme") ?? "light";
-      setTheme(savedTheme);
-    }
+    setMounted(true);
+    const savedTheme = localStorage.getItem('theme') ?? 'light';
+    setTheme(savedTheme);
   }, []);
 
+  // Don't render anything until mounted
+  if (!mounted) return null;
+
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    const root = window.document.documentElement;
+    if (newTheme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', newTheme);
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const root = window.document.documentElement;
-      if (theme === "dark") {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-      localStorage.setItem("theme", theme);
-    }
-  }, [theme]);
-
   return (
-    <button
-      onClick={toggleTheme}
-      className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-    >
-      {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+    <button onClick={toggleTheme} className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+      {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
     </button>
   );
 }
