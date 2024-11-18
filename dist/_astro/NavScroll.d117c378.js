@@ -1,0 +1,1 @@
+import{r as l}from"./index.b2a7ed32.js";function s(){return l.useEffect(()=>{const e=document.querySelector("header"),r=()=>{window.scrollY>0?e?.classList.add("scrolled"):e?.classList.remove("scrolled")};return window.addEventListener("scroll",r),()=>window.removeEventListener("scroll",r)},[]),null}export{s as default};
