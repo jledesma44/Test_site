@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+import BlogPagination from '../components/BlogPagination.astro';
 
 interface FeaturedImage {
   url: string;
@@ -22,18 +23,50 @@ const { frontmatter } = Astro.props;
 const { title, description, pubDate, author, featuredImage } = frontmatter;
 
 // Ensure pubDate is a valid Date object
-function parseDate(date: string | Date): Date {
+function parseDate(date: string | Date | undefined): Date {
+  if (!date) return new Date(0); // Return epoch date for undefined dates
   if (date instanceof Date) return date;
+  
   // Remove any quotes and try to parse the date
-  const cleanDate = date.replace(/['"]/g, '');
+  const cleanDate = date.toString().replace(/['"]/g, '');
   const parsedDate = new Date(cleanDate);
   if (isNaN(parsedDate.getTime())) {
-    throw new Error(`Invalid date: ${date}`);
+    console.warn(`Invalid date: ${date}, using epoch date instead`);
+    return new Date(0);
   }
   return parsedDate;
 }
 
 const date = parseDate(pubDate);
+
+// Get all blog posts
+const posts = await Astro.glob('../pages/blog/*.mdx');
+
+// Sort posts by date (newest first)
+const sortedPosts = posts
+  .filter(post => post.frontmatter?.pubDate) // Only include posts with dates
+  .sort((a, b) => {
+    const dateA = parseDate(a.frontmatter.pubDate);
+    const dateB = parseDate(b.frontmatter.pubDate);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+// Find current post index
+const currentIndex = sortedPosts.findIndex(post => 
+  post.frontmatter.title === title && 
+  parseDate(post.frontmatter.pubDate).getTime() === date.getTime()
+);
+
+// Get previous and next posts
+const prevPost = currentIndex < sortedPosts.length - 1 ? {
+  url: sortedPosts[currentIndex + 1].url,
+  title: sortedPosts[currentIndex + 1].frontmatter.title
+} : undefined;
+
+const nextPost = currentIndex > 0 ? {
+  url: sortedPosts[currentIndex - 1].url,
+  title: sortedPosts[currentIndex - 1].frontmatter.title
+} : undefined;
 ---
 
 <Layout title={title}>
@@ -63,5 +96,6 @@ const date = parseDate(pubDate);
       {description && <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">{description}</p>}
     </header>
     <slot />
+    <BlogPagination prevPost={prevPost} nextPost={nextPost} />
   </article>
 </Layout>
